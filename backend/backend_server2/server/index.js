@@ -12,6 +12,7 @@ app.use(cors({
 app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(bodyParser.text({ type: 'text/plain' }));
 
+
 app.use(cors({
     methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
 }));
@@ -41,6 +42,13 @@ app.post("/Movement_Control", (req, res) => {
   const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
   res.json(resMessage);
 });
+
+app.get('/Image_Url', (req, res) => {
+  const img_path = path.resolve(__dirname, './image/img1.jpeg');
+  res.setHeader('Content-Type', 'image/jpeg');
+  res.sendFile(img_path);
+});
+
 
 // app.get('*', (req, res) => {
 //     res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
