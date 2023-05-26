@@ -1,6 +1,8 @@
 const express = require("express"); 
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const path = require('path');
+const { reverse } = require("dns");
 const PORT = process.env.PORT || 3001; const app = express();
 
 app.use(cors({ 
@@ -8,6 +10,7 @@ app.use(cors({
 }));
 
 app.use(express.static(path.resolve(__dirname, './client/build')));
+app.use(bodyParser.text({ type: 'text/plain' }));
 
 app.use(cors({
     methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
@@ -28,20 +31,20 @@ function generateMatrix(rows, columns) {
   
 app.get("/mazeMatrix", (req, res) => {
     res.json({
-    "mazeMatrix": generateMatrix(10, 10)
+    "mazeMatrix": generateMatrix(50, 50)
     });
 });
 
 // Handle the data received from the ESP32
-app.post("/data", (req, res) => {
+app.post("/Movement_Control", (req, res) => {
   const receivedData = req.body;
-  // Process the data or store it in a database
-  res.send("Data received successfully");
+  const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
+  res.json(resMessage);
 });
 
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+// });
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
