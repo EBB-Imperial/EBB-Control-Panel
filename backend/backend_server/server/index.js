@@ -1,15 +1,14 @@
-var mysql = require('mysql');
-var con = mysql.createConnection( {
-    host: "3.88.111.60", 
-    user: "Johnny", 
-    password: "123456", 
-    database: "Persondb"
-});
-con.connect(function(err) {
-if (err) throw err;
-console.log("Successfully connected to the database...\n");
-});
-
+// var mysql = require('mysql');
+// var con = mysql.createConnection( {
+//     host: "3.88.111.60", 
+//     user: "Johnny", 
+//     password: "123456", 
+//     database: "Persondb"
+// });
+// con.connect(function(err) {
+// if (err) throw err;
+// console.log("Successfully connected to the database...\n");
+// });
 
 
 const express = require("express"); 
@@ -38,11 +37,18 @@ app.get("/tableData33", (req, res) => {
     })}, 8000);
 });
 
-app.get("/personQuery", (req, res) => {
-    con.query("SELECT * FROM Persons", function (err, result, fields) {
-    if (err) throw err;
-    res.json(result) });
-    });
+// app.get("/personQuery", (req, res) => {
+//     con.query("SELECT * FROM Persons", function (err, result, fields) {
+//     if (err) throw err;
+//     res.json(result) });
+// });
+
+app.get("/pollServer", (req, res) => {
+    var d = new Date();
+    const json_res = {
+    "time" : d.toTimeString() };
+    res.send(json_res); 
+});
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));

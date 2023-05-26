@@ -24,24 +24,19 @@ function generateMatrix(rows, columns) {
       matrix.push(row);
     }
     return matrix;
-  }
+}
   
 app.get("/mazeMatrix", (req, res) => {
     res.json({
-    "mazeMatrix": generateMatrix(50, 50)
-    // "mazeMatrix": [
-    //             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    //             [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    //             [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    //             [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
-    //             [1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-    //             [1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-    //             [1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-    //             [1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    //             [1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    //             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    //           ]
+    "mazeMatrix": generateMatrix(10, 10)
     });
+});
+
+// Handle the data received from the ESP32
+app.post("/data", (req, res) => {
+  const receivedData = req.body;
+  // Process the data or store it in a database
+  res.send("Data received successfully");
 });
 
 app.get('*', (req, res) => {
