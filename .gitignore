@@ -1,4 +1,2 @@
-./backend/backend_server/node_modules/*
-./backend/backend_server2/node_modules/*
-./frontend/client/node_modules/*
-./frontend/client2/node_modules/*
+node_modules/*
+```
