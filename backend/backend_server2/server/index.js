@@ -22,7 +22,7 @@ function generateMatrix(rows, columns) {
     for (let i = 0; i < rows; i++) {
       const row = [];
       for (let j = 0; j < columns; j++) {
-        const randomValue = Math.random() < 0.5 ? 0 : 1;
+        const randomValue = Math.random() < 0.65 ? 0 : 1;
         row.push(randomValue);
       }
       matrix.push(row);
@@ -32,8 +32,19 @@ function generateMatrix(rows, columns) {
   
 app.get("/mazeMatrix", (req, res) => {
     res.json({
-    "mazeMatrix": generateMatrix(50, 50)
+    "mazeMatrix": generateMatrix(100, 100)
     });
+});
+
+app.get("/display_data", (req, res) => {
+  var d = new Date();
+  res.json({
+    "data_": [
+        { name: 'John Doe', age: 30, city: 'New York' , time: d.toTimeString()},
+        { name: 'Jane Smith', age: 25, city: 'London' , time: d.toTimeString()},
+        { name: 'Bob Johnson', age: 35, city: 'Paris' , time: d.toTimeString()}
+      ]
+  });
 });
 
 // Handle the data received from the ESP32
