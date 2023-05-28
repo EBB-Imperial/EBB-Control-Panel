@@ -7,19 +7,11 @@ import ReactPolling from "react-polling/lib/ReactPolling";
 
 
 function App() {
-  console.log("App called");
   const [buttonContainer, data] = Control_Module.Control_Button();
   const [mazeMatrix, updateMap] = useState([[]]);
   const [data_, updateData] = useState([[]]);
 
-  // Image_display();
-  // const data_ = [
-  //   { name: 'John Doe', age: 30, city: 'New York' },
-  //   { name: 'Jane Smith', age: 25, city: 'London' },
-  //   { name: 'Bob Johnson', age: 35, city: 'Paris' }
-  // ];
-  console.log(data_);
-  
+  Image_display();
 
   const pollingSuccess = (jsonResponse) => {
     updateData(jsonResponse.data_)
@@ -76,7 +68,7 @@ function App() {
       <div id="result"></div>
       <ReactPolling
         url={'http://localhost:3001/display_data/'}
-        interval= {500} // in milliseconds(ms)
+        interval= {200} // in milliseconds(ms)
         retryCount={3} // this is optional
         onSuccess = {pollingSuccess}
         onFailure= {pollingFailure}
@@ -86,12 +78,9 @@ function App() {
           const newTable = CreateDataTable(data_);
           // document.replaceChild(newTable, oldTable);
           if (oldTable != null){
-            console.log("old",oldTable);
-            console.log("new",newTable);
             oldTable.replaceWith(newTable);
           }
         }}
-        
       />
     </div> );
 }

@@ -37,12 +37,12 @@ app.get("/mazeMatrix", (req, res) => {
 });
 
 app.get("/display_data", (req, res) => {
-  var d = new Date();
+  let d = new Date();
   res.json({
     "data_": [
-        { name: 'John Doe', age: 30, city: 'New York' , time: d.toTimeString()},
-        { name: 'Jane Smith', age: 25, city: 'London' , time: d.toTimeString()},
-        { name: 'Bob Johnson', age: 35, city: 'Paris' , time: d.toTimeString()}
+        { data1: 1,data2: 2,data3: 3, time: d.toTimeString()},
+        { data1: 4,data2: 5,data3: 6, time: d.toTimeString()},
+        { data1: 7,data2: 8,data3: 9, time: d.toTimeString()},
       ]
   });
 });
