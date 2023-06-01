@@ -1,5 +1,9 @@
 export function Create_Control_Button() {
     // Create the container div and add it to the body
+    const temp = document.getElementById('buttonContainer');
+    if (temp != null){
+      return null;
+    }
     const buttonContainer = document.createElement('div');
     buttonContainer.id = 'buttonContainer';
     document.body.appendChild(buttonContainer);
@@ -44,8 +48,27 @@ export function Create_Control_Button() {
     return buttonContainer
 }
 
+function sendMessage(message) {
+    
+  fetch('http://localhost:3001/Movement_Control', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+    body: JSON.stringify(message),
+  })
+  .then((res) => res.json())
+  .then((data) => {
+    const resultElement = document.getElementById('result');
+    resultElement.textContent = data.message;})
+  .catch((err) => {alert(err)});
+}
+
 export function Control_Button() {
     const buttonContainer = Create_Control_Button();
+    if (buttonContainer == null){
+      return ;
+    }
 
     const buttons = buttonContainer.children;
 
@@ -58,37 +81,26 @@ export function Control_Button() {
  
     // Add event listeners to the buttons
     btnForward.addEventListener('click', () => {
+      console.log('Forward button clicked');
       data = sendMessage('forward'); // Replace 'forward' with the appropriate message for this button
     });
   
     btnBackward.addEventListener('click', () => {
+      console.log('Backward button clicked');
       data = sendMessage('backward'); // Replace 'backward' with the appropriate message for this button
     });
   
     btnLeft.addEventListener('click', () => {
+      console.log('Left button clicked');
       data = sendMessage('left'); // Replace 'left' with the appropriate message for this button
     });
   
     btnRight.addEventListener('click', () => {
+      console.log('Right button clicked');
       data = sendMessage('right'); // Replace 'right' with the appropriate message for this button
     });
   
     // Function to send the message to the server
-    function sendMessage(message) {
-    
-      fetch('http://localhost:3001/Movement_Control', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: JSON.stringify(message),
-      })
-      .then((res) => res.json())
-      .then((data) => {
-        const resultElement = document.getElementById('result');
-        resultElement.textContent = data.message;})
-      .catch((err) => {alert(err)});
-    }
   
     return [buttonContainer, data];
   }

@@ -19,8 +19,9 @@ async function image_update(folderPath) {
 
     // Get the most up-to-date image
     const latestImage = getLatestImage(imageFiles.map(file => path.join(folderPath, file)));
-    console.log('Latest image:', latestImage);
+    // console.log('Latest image:', latestImage);
     return latestImage;
+    
   } catch (err) {
     console.error('Error reading folder:', error);
     return null;

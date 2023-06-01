@@ -7,7 +7,7 @@ import ReactPolling from "react-polling/lib/ReactPolling";
 import CreateProgressBar from "./Import/Progress_Bar";
 
 function App() {
-  const [buttonContainer, data] = Control_Module.Control_Button();
+  Control_Module.Control_Button();
   const [mazeMatrix, updateMap] = useState([[]]);
   const [data_, updateData] = useState([[]]);
 
