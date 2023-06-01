@@ -1,3 +1,14 @@
+let socket = new WebSocket("ws://localhost:8080");
+
+socket.onopen = function(e) {
+  console.log("[open] Connection established");
+  console.log("Sending to server");
+};
+
+socket.onerror = function(error) {
+  console.log(`[error] ${error.message}`);
+};
+
 export function Create_Control_Button() {
     // Create the container div and add it to the body
     const buttonContainer = document.createElement('div');
@@ -21,6 +32,28 @@ export function Create_Control_Button() {
     btnForward.id = 'btnRight'; // Assign ID to the button
     btnRight.textContent = 'Right';
 
+    // add websocket event listeners
+    // Add event listeners to the buttons
+    btnForward.addEventListener('click', () => {
+      data = sendMessage('forward'); // Replace 'forward' with the appropriate message for this button
+      socket.send('forward');
+    });
+
+    btnBackward.addEventListener('click', () => {
+      data = sendMessage('backward'); // Replace 'backward' with the appropriate message for this button
+      socket.send('backward');
+    });
+
+    btnLeft.addEventListener('click', () => {
+      data = sendMessage('left'); // Replace 'left' with the appropriate message for this button
+      socket.send('left');
+    });
+
+    btnRight.addEventListener('click', () => {
+      data = sendMessage('right'); // Replace 'right' with the appropriate message for this button
+      socket.send('right');
+    });
+
     // Add the buttons to the container
     buttonContainer.appendChild(btnForward);
     buttonContainer.appendChild(btnBackward);
@@ -41,8 +74,9 @@ export function Create_Control_Button() {
         button.style.height = '60px';
         button.style.marginBottom = '10px';
     }
-    return buttonContainer
+    return [buttonContainer, data];
 }
+
 
 export function Control_Button() {
     const buttonContainer = Create_Control_Button();

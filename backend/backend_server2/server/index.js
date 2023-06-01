@@ -52,17 +52,24 @@ app.get("/display_data", (req, res) => {
 
 app.post("/Movement_Control", (req, res) => {
   const receivedData = req.body;
-  const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
-  res.json(resMessage);
+  console.log("button pressed.");
+  // const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
+  // res.json(resMessage);
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(receivedData));
+    }
+  });
 });
 
 app.get('/Image_Url', (req, res) => {
   // const img_path = path.resolve(__dirname, './image/img1.jpeg');
   // const img_path = image_updater.image_update("/Users/wujunyi/Desktop/Year2_Project/EBB-Control-Panel/backend/backend_server2/server/image");
-  const img_path = path.resolve(__dirname, "/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images/1685621985_10.jpg");
-  console.log(img_path);
-  res.setHeader('Content-Type', 'image/jpg');
-  res.sendFile(img_path);
+
+  // const img_path = path.resolve(__dirname, "/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images/1685621985_10.jpg");
+  // console.log(img_path);
+  // res.setHeader('Content-Type', 'image/jpg');
+  // res.sendFile(img_path);
 });
 
 app.get('*', (req, res) => {
@@ -74,8 +81,19 @@ app.listen(PORT, () => {
 });
 
 
+const WebSocket = require('ws');
 
+const wss = new WebSocket.Server({ port: 8080 });
 
+wss.on('connection', (ws) => {
+  ws.on('message', (message) => {
+    console.log('received: %s', message);
+  });
+
+  ws.send('connected');
+});
+
+console.log('WebSocket server listening on port 8080');
 
 
 
