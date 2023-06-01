@@ -56,14 +56,33 @@ app.post("/Movement_Control", (req, res) => {
   res.json(resMessage);
 });
 
-app.get('/Image_Url', (req, res) => {
-  // const img_path = path.resolve(__dirname, './image/img1.jpeg');
-  // const img_path = image_updater.image_update("/Users/wujunyi/Desktop/Year2_Project/EBB-Control-Panel/backend/backend_server2/server/image");
-  const img_path = path.resolve(__dirname, "/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images/1685621985_10.jpg");
-  console.log(img_path);
-  res.setHeader('Content-Type', 'image/jpg');
-  res.sendFile(img_path);
+app.get('/Image_Url', async (req, res) => {
+  try {
+    const folderPath = '/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images';
+    const latestImage = await image_updater.image_update(folderPath);
+    
+    if (latestImage) {
+      console.log('Latest image path:', latestImage);
+      res.setHeader('Content-Type', 'image/jpg');
+      res.sendFile(latestImage);
+    } else {
+      res.status(404).json({ error: 'No new images found.' });
+    }
+  } catch (err) {
+    console.error('Error retrieving image:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
+
+// app.get('/Image_Url', (req, res) => {
+//   // const img_path = path.resolve(__dirname, './image/img1.jpeg');
+//   const img_path = image_updater.image_update("/Users/wujunyi/Desktop/Year2_Project/EBB-Control-Panel/backend/backend_server2/server/image");
+//   // const img_path = path.resolve(__dirname, "/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images/1685621985_10.jpg");
+//   console.log("img_path" + img_path);
+//   res.setHeader('Content-Type', 'image/jpg');
+//   res.sendFile(img_path);
+// });
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
