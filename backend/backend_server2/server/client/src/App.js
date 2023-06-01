@@ -4,16 +4,21 @@ import * as Control_Module from './Import/Control_Button';
 import Image_display from "./Import/Image_display";
 import CreateDataTable from "./Import/Data_table";
 import ReactPolling from "react-polling/lib/ReactPolling";
-
+import CreateProgressBar from "./Import/Progress_Bar";
 
 function App() {
-  console.log("App called");
   const [buttonContainer, data] = Control_Module.Control_Button();
   const [mazeMatrix, updateMap] = useState([[]]);
   const [data_, updateData] = useState([[]]);
 
   Image_display();
 
+  // const progressBar = document.createElement('progress');
+  // progressBar.max = 100; // Set the maximum value of the progress bar
+  // progressBar.value = 50; // Set the initial value of the progress bar (between 0 
+  // // document.body.appendChild(progressBar);
+  // console.log(progressBar);
+  
   const pollingSuccess = (jsonResponse) => {
     updateData(jsonResponse.data_)
     return true;
@@ -63,13 +68,14 @@ function App() {
 
   return (
     <div className="App">
-      <h1 style={{ fontSize: '36px' }}>EBB-Imperial   Maze</h1>
+      <h1 style={{ fontSize: '36px' }}> EBB-Imperial   Maze</h1>
       <Maze td = {mazeMatrix}/>
       <button onClick={() => handleClickRandom(updateMap)}>Randomize Maze</button>
       <div id="result"></div>
+      <progress max="100" value="50"></progress>
       <ReactPolling
         url={'http://localhost:3001/display_data/'}
-        interval= {500} // in milliseconds(ms)
+        interval= {200} // in milliseconds(ms)
         retryCount={3} // this is optional
         onSuccess = {pollingSuccess}
         onFailure= {pollingFailure}
@@ -79,12 +85,9 @@ function App() {
           const newTable = CreateDataTable(data_);
           // document.replaceChild(newTable, oldTable);
           if (oldTable != null){
-            console.log("old",oldTable);
-            console.log("new",newTable);
             oldTable.replaceWith(newTable);
           }
         }}
-        
       />
     </div> );
 }

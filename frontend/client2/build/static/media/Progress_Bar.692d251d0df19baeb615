@@ -1,0 +1,9 @@
+function CreateProgressBar(){
+    const progressBar = document.createElement('progress');
+    progressBar.max = 100; // Set the maximum value of the progress bar
+    progressBar.value = 50; // Set the initial value of the progress bar (between 0 and 100)
+    // Append the progress bar to a container element in the document
+    document.body.appendChild(progressBar);
+    return progressBar;
+};
+export default CreateProgressBar;

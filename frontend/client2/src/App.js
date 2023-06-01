@@ -68,7 +68,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1 style={{ fontSize: '36px' }}>EBB-Imperial   Maze</h1>
+      <h1 style={{ fontSize: '36px' }}> EBB-Imperial   Maze</h1>
       <Maze td = {mazeMatrix}/>
       <button onClick={() => handleClickRandom(updateMap)}>Randomize Maze</button>
       <div id="result"></div>
