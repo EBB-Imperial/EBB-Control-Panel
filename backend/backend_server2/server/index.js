@@ -55,7 +55,7 @@ app.post("/Movement_Control", (req, res) => {
   console.log("button pressed.");
   const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
   res.json(resMessage);
-  
+
   // wss.clients.forEach((client) => {
   //   if (client.readyState === WebSocket.OPEN) {
   //     client.send(JSON.stringify(receivedData));
@@ -65,7 +65,9 @@ app.post("/Movement_Control", (req, res) => {
 
 app.get('/Image_Url', async (req, res) => {
   try {
-    const folderPath = '/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images';
+    // const folderPath = '/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images';
+    const folderPath = path.resolve(__dirname, '../../../../EBB-ESP32-Firmware/images');
+    console.log(folderPath);
     const latestImage = await image_updater.image_update(folderPath);
     
     if (latestImage) {

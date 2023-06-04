@@ -21,7 +21,7 @@ async function image_update(folderPath) {
     const latestImage = getLatestImage(imageFiles.map(file => path.join(folderPath, file)));
     // console.log('Latest image:', latestImage);
     return latestImage;
-    
+
   } catch (err) {
     console.error('Error reading folder:', error);
     return null;
@@ -35,8 +35,6 @@ function getLatestImage(images) {
       return currentTime > latestTime ? currentImage : latestImage;
     });
 }
-image_update("/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images");
-
 
 module.exports = {
     image_update: image_update
