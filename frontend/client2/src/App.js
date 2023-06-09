@@ -50,6 +50,13 @@ function App() {
             document.body.appendChild(get_table)
         }})
         .catch((err) => alert(err));
+
+    fetch("http://localhost:3001/robot_history/")
+         .then((res) => res.json())
+         .then((data) => alert(JSON.stringify(data)))
+         .catch((err) => alert(err)
+          );
+         
   }, [updateMap, updateData]);
   // document.body.appendChild(CreateDataTable(data.data_)
 

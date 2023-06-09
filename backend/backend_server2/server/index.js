@@ -4,13 +4,36 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const { reverse } = require("dns");
 const PORT = process.env.PORT || 3001; const app = express();
-
 const image_updater = require('./image_updater');
 
-
 app.use(cors({ 
-    origin: '*'
+  origin: '*'
 }));
+
+var mysql = require('mysql');
+var con = mysql.createConnection(
+{
+    host: "54.160.181.19",
+    user: "Johnny",
+    password: "123456",
+    database: "robot_history"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Successfully connected to the database...\n");
+});
+
+
+
+app.get("/robot_history", (req, res) => {
+  con.query("SELECT * FROM robot_history", function (err, result, fields) {
+    if (err) throw err;
+    res.json(result)
+  });
+});
+
+
 
 app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(bodyParser.text({ type: 'text/plain' }));
