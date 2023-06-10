@@ -5,30 +5,33 @@ const path = require('path');
 const { reverse } = require("dns");
 const PORT = process.env.PORT || 3001; const app = express();
 const image_updater = require('./image_updater');
+var replay = false;
+
 
 app.use(cors({ 
   origin: '*'
 }));
 
-var mysql = require('mysql');
-var con = mysql.createConnection(
-{
-    host: "54.160.181.19",
-    user: "Johnny",
-    password: "123456",
-    database: "robot_history"
-});
+// var mysql = require('mysql');
+// var con = mysql.createConnection(
+// {
+//     host: "54.160.181.19",
+//     user: "Johnny",
+//     password: "123456",
+//     database: "robot_history"
+// });
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Successfully connected to the database...\n");
-});
+// con.connect(function(err) {
+//   if (err) throw err;
+//   console.log("Successfully connected to the database...\n");
+// });
+
 
 
 
 app.get("/robot_history", (req, res) => {
   con.query("SELECT * FROM robot_history", function (err, result, fields) {
-    if (err) throw err;
+    // if (err) throw err;
     res.json(result)
   });
 });
@@ -37,6 +40,7 @@ app.get("/robot_history", (req, res) => {
 
 app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(bodyParser.text({ type: 'text/plain' }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use(cors({
@@ -86,6 +90,16 @@ app.post("/Movement_Control", (req, res) => {
   // });
 });
 
+app.post('/Replay_Control', (req, res) => {
+  const receivedData = req.body;
+  if (receivedData == 'replay_change'){
+    console.log(replay)
+    replay = !replay
+  }
+  const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
+  res.json(resMessage);
+});
+
 app.get('/Image_Url', async (req, res) => {
   try {
     // const folderPath = '/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images';
@@ -115,6 +129,8 @@ app.get('/Image_Url', async (req, res) => {
 //   res.setHeader('Content-Type', 'image/jpg');
 //   res.sendFile(img_path);
 // });
+
+
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));

@@ -1,38 +1,28 @@
 import React, {useState} from "react"; 
+import './App.css';
 import Maze from './Import/Maze';
 import * as Control_Module from './Import/Control_Button';
 import Image_display from "./Import/Image_display";
 import CreateDataTable from "./Import/Data_table";
 import ReactPolling from "react-polling/lib/ReactPolling";
 import CreateProgressBar from "./Import/Progress_Bar";
+import create_replay_button from "./Import/Replay_button";
 
 function App() {
-  Control_Module.Control_Button();
+  
+  // document.body.appendChild(CreateDataTable(data.data_)
   const [mazeMatrix, updateMap] = useState([[]]);
   const [data_, updateData] = useState([[]]);
 
+  
+
+  
   Image_display();
+  Control_Module.Control_Button();
+  create_replay_button()
 
-  // const progressBar = document.createElement('progress');
-  // progressBar.max = 100; // Set the maximum value of the progress bar
-  // progressBar.value = 50; // Set the initial value of the progress bar (between 0 
-  // // document.body.appendChild(progressBar);
-  // console.log(progressBar);
-  
-  const pollingSuccess = (jsonResponse) => {
-    updateData(jsonResponse.data_)
-    return true;
-  }
-  
-  const pollingFailure = () => { 
-    alert('Polling failed');
-    return true;
-  }
 
-  const fetchData = () => {
-    return fetch("http://localhost:3001/display_data/");
-  }
-  
+
   React.useEffect(() => { ///See CORS
     fetch("http://localhost:3001/mazeMatrix/") 
         .then((res) => res.json())
@@ -53,12 +43,26 @@ function App() {
 
     fetch("http://localhost:3001/robot_history/")
          .then((res) => res.json())
-         .then((data) => alert(JSON.stringify(data)))
+        //  .then((data) => alert(JSON.stringify(data)))
          .catch((err) => alert(err)
           );
          
   }, [updateMap, updateData]);
-  // document.body.appendChild(CreateDataTable(data.data_)
+
+  const pollingSuccess = (jsonResponse) => {
+    updateData(jsonResponse.data_)
+    return true;
+  }
+  
+  const pollingFailure = () => { 
+    alert('Polling failed');
+    return true;
+  }
+
+  const fetchData = () => {
+    return fetch("http://localhost:3001/display_data/");
+  }
+  
 
   const handleClickRandom = (updateMethod) => { 
     fetch("http://localhost:3001/mazeMatrix/")
