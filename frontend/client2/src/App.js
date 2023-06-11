@@ -13,7 +13,7 @@ function App() {
   // document.body.appendChild(CreateDataTable(data.data_)
   const [mazeMatrix, updateMap] = useState([[]]);
   const [data_, updateData] = useState([[]]);
-
+  const [ReplayMap, updateReplayMap] = useState([[]])
   
 
   
@@ -21,14 +21,23 @@ function App() {
   Control_Module.Control_Button();
   create_replay_button()
 
+ 
 
 
   React.useEffect(() => { ///See CORS
+
+    fetch("http://localhost:3001/ReplayMap/") 
+      .then((res) => res.json())
+      .then((data) => updateReplayMap(data.ReplayMap)) 
+      .catch((err) => alert("ReplayMap" + err)
+    );
+
     fetch("http://localhost:3001/mazeMatrix/") 
         .then((res) => res.json())
         .then((data) => updateMap(data.mazeMatrix)) 
         .catch((err) => alert(err)
     );
+
     fetch("http://localhost:3001/display_data")
         .then((res) => res.json())
         .then((data) => {
@@ -41,11 +50,11 @@ function App() {
         }})
         .catch((err) => alert(err));
 
-    fetch("http://localhost:3001/robot_history/")
-         .then((res) => res.json())
-        //  .then((data) => alert(JSON.stringify(data)))
-         .catch((err) => alert(err)
-          );
+    // fetch("http://localhost:3001/robot_history/")
+    //      .then((res) => res.json())
+    //     //  .then((data) => alert(JSON.stringify(data)))
+    //      .catch((err) => alert(err)
+    //       );
          
   }, [updateMap, updateData]);
 
@@ -62,7 +71,16 @@ function App() {
   const fetchData = () => {
     return fetch("http://localhost:3001/display_data/");
   }
-  
+
+  const pollingSuccess_2 = (jsonResponse) => {
+    updateReplayMap(jsonResponse.ReplayMap)
+    return true;
+  }
+
+  const fetchData_2 = () => {
+    return fetch("http://localhost:3001/ReplayMap/")
+  }
+
 
   const handleClickRandom = (updateMethod) => { 
     fetch("http://localhost:3001/mazeMatrix/")
@@ -71,6 +89,7 @@ function App() {
       .catch((err) => alert(err)
     );}
   
+
   // const handleDateUpdate = (updateMethod) => { 
   //   fetch("http://localhost:3001/display_data/")
   //     .then((res) => res.json())
@@ -100,6 +119,20 @@ function App() {
           }
         }}
       />
+      
+      <ReactPolling
+        url={'http://localhost:3001/ReplayMatrix/'}
+        interval= {1000} // in milliseconds(ms)
+        retryCount={3} // this is optional
+        onSuccess = {pollingSuccess_2}
+        onFailure= {pollingFailure}
+        promise={fetchData_2} // custom api calling function that should return a promise
+        render={({ startPolling, stopPolling, isPolling }) => {
+          
+        }}
+      />
+      <Maze td = {ReplayMap}/>
+      {/* <div id="dataDisplay"></div> */}
     </div> );
 }
 export default App;

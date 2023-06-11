@@ -5,12 +5,16 @@ const path = require('path');
 const { reverse } = require("dns");
 const PORT = process.env.PORT || 3001; const app = express();
 const image_updater = require('./image_updater');
+// replay function----------------------------------------------
 var replay = false;
 
+//--------------------------------------------------------------
 
 app.use(cors({ 
   origin: '*'
 }));
+
+// DATABASE-----------------------------------------------------
 
 // var mysql = require('mysql');
 // var con = mysql.createConnection(
@@ -26,17 +30,14 @@ app.use(cors({
 //   console.log("Successfully connected to the database...\n");
 // });
 
+// app.get("/robot_history", (req, res) => {
+//   con.query("SELECT * FROM robot_history", function (err, result, fields) {
+//     // if (err) throw err;
+//     res.json(result)
+//   });
+// });
 
-
-
-app.get("/robot_history", (req, res) => {
-  con.query("SELECT * FROM robot_history", function (err, result, fields) {
-    // if (err) throw err;
-    res.json(result)
-  });
-});
-
-
+//--------------------------------------------------------------
 
 app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(bodyParser.text({ type: 'text/plain' }));
@@ -59,12 +60,28 @@ function generateMatrix(rows, columns) {
     }
     return matrix;
 }
+
+function zeroMatrix(rows, columns) {
+  const matrix = [];
+  for (let i = 0; i < rows; i++) {
+    const row = [];
+    for (let j = 0; j < columns; j++) {
+      const randomValue = 0;
+      row.push(randomValue);
+    }
+    matrix.push(row);
+  }
+  return matrix;
+}
   
 app.get("/mazeMatrix", (req, res) => {
     res.json({
     "mazeMatrix": generateMatrix(100, 100)
     });
 });
+
+
+// GET EndPoint-----------------------------------------------------
 
 app.get("/display_data", (req, res) => {
   let d = new Date();
@@ -90,21 +107,21 @@ app.post("/Movement_Control", (req, res) => {
   // });
 });
 
-app.post('/Replay_Control', (req, res) => {
-  const receivedData = req.body;
-  if (receivedData == 'replay_change'){
-    console.log(replay)
-    replay = !replay
-  }
-  const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
-  res.json(resMessage);
-});
+// app.post('/Replay_Control', (req, res) => {
+//   const receivedData = req.body;
+//   // if (receivedData === 'replay_change'){
+//   console.log(replay)
+//   replay = !replay
+  
+//   const resMessage = {message: 'Received Data: ' + JSON.stringify(receivedData) };
+//   res.json(resMessage);
+// });
 
 app.get('/Image_Url', async (req, res) => {
   try {
     // const folderPath = '/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images';
     const folderPath = path.resolve(__dirname, '../../../../EBB-ESP32-Firmware/images');
-    console.log(folderPath);
+    // console.log(folderPath);
     const latestImage = await image_updater.image_update(folderPath);
     
     if (latestImage) {
@@ -120,21 +137,55 @@ app.get('/Image_Url', async (req, res) => {
   }
 });
 
+let intervalId = null; // Store the interval ID to clear it later
 
-// app.get('/Image_Url', (req, res) => {
-//   // const img_path = path.resolve(__dirname, './image/img1.jpeg');
-//   const img_path = image_updater.image_update("/Users/wujunyi/Desktop/Year2_Project/EBB-Control-Panel/backend/backend_server2/server/image");
-//   // const img_path = path.resolve(__dirname, "/Users/wujunyi/Desktop/Year2_Project/EBB-ESP32-Firmware/images/1685621985_10.jpg");
-//   console.log("img_path" + img_path);
-//   res.setHeader('Content-Type', 'image/jpg');
-//   res.sendFile(img_path);
-// });
+function sendNextMapping(currentIndex) {
+  console.log('called')
+  const mockData = [
+    { series_id: 1, mapping: 'Mapping 1' },
+    { series_id: 2, mapping: 'Mapping 2' },
+    { series_id: 3, mapping: 'Mapping 3' },
+    // Add more data mappings as needed
+  ];
 
+  const mapping = mockData[currentIndex].mapping;
+  return mapping
 
+}
 
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+app.post('/Replay_Control', (req, res) => {
+  const receivedData = req.body;
+  let test = 'replay_change'
+  console.log(receivedData, replay, typeof receivedData, typeof "replay_change", receivedData === test);
+  
+  console.log(replay);
+  replay = !replay;
+  isReadingData = replay; // Set isReadingData to the value of replay
+  const resMessage = { message: 'Received Data: ' + JSON.stringify(receivedData) };
+  res.json(resMessage);
 });
+
+
+  
+app.get("/ReplayMap", (req, res) => {
+  if(replay){
+    res.json({
+      "ReplayMap": generateMatrix(100, 100)
+    });
+  }
+  else{
+    res.json({
+      "ReplayMap": zeroMatrix(100, 100)
+    });
+  }
+  }
+);
+
+
+
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+// });
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);

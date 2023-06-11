@@ -21,8 +21,8 @@ function sendMessage(message) {
     })
     .then((res) => res.json())
     .then((data) => {
-      const resultElement = document.getElementById('result');
-      resultElement.textContent = data.message;})
+      // document.getElementById('dataDisplay').innerText = JSON.stringify(data);
+      console.log(data)})
     .catch((err) => {alert(err)});
   }
 
@@ -33,7 +33,6 @@ export function create_replay_button() {
     }
     const startButton = createCustomButton("Replay", 150, 50, 1400, 100, 'startButton');
     startButton.addEventListener('click', () => {
-      console.log('replay');
       sendMessage('replay_change');
     })
     document.body.appendChild(startButton);

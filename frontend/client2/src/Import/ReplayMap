@@ -1,0 +1,22 @@
+function ReplayMap(){
+    fetch("http://localhost:3001/ReplayMap/") 
+        .then((res) => res.json())
+        .then(blob => {
+            
+
+            const temp = document.getElementById('image1')
+            if (temp != null){
+                
+            }
+            else{
+                
+                document.body.appendChild(imgElement);
+            }
+        })
+            
+        .catch(error => {
+            console.error(error);
+        });
+
+}
+export default Image_display;
